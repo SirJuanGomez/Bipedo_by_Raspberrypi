@@ -1,48 +1,41 @@
-import math
-from Control import *
-from Servo import *
-class Action:
-    def __init__(self):
-        self.servo = Servo()
-        self.control = Control()
-        self.servo.setServoAngle(15, 90)
+from Control import RobotControl
+import time
 
-    def step_forward(self):
-        # Utiliza la función forWard del Control
-        self.control.forWard()
+class RobotActions:
+    def __init__(self, update_frequency=50):
+        self.robot = RobotControl(update_frequency)
+        self.step_height = 30  # Altura del paso
+        self.step_length = 50  # Longitud del paso
+        self.hip_angle = 15  # Ángulo de apertura de la cadera
 
-    def wave_hand(self):
-        # Eleva primero el hombro y el codo antes de saludar
-        for i in range(90, 130):
-            self.servo.setServoAngle(11, i)  # Hombro
-            time.sleep(0.02)
-        for i in range(90, 130):
-            self.servo.setServoAngle(12, i)  # Codo
-            time.sleep(0.02)
-        for i in range(90, 130):
-            self.servo.setServoAngle(13, i)  # Muñeca
-            time.sleep(0.02)
-        # Vuelve primero la muñeca, luego el codo y finalmente el hombro
-        for i in range(130, 90, -1):
-            self.servo.setServoAngle(13, i)  # Muñeca
-            time.sleep(0.02)
-        for i in range(130, 90, -1):
-            self.servo.setServoAngle(12, i)  # Codo
-            time.sleep(0.02)
-        for i in range(130, 90, -1):
-            self.servo.setServoAngle(11, i)  # Hombro
-            time.sleep(0.02)
-    def squat(self):
-        # Agacharse y levantarse usando setpLeft y setpRight para simular equilibrio
-        for _ in range(5):
-            self.control.setpLeft()
-            self.control.setpRight()
+    def walk_forward(self, steps=5):
+        """Realiza una secuencia de pasos hacia adelante."""
+        for _ in range(steps):
+            trajectory = self.robot.calculate_step_trajectory(self.step_height, self.step_length)
+            for point in trajectory:
+                angles = self.robot.inverse_kinematics(*point, hip_angle=self.hip_angle)
+                if self.robot.validate_movement(angles):
+                    print(f"Ángulos calculados: {angles}")
+                    time.sleep(self.robot.update_period)
+                else:
+                    print("Movimiento no válido.")
 
-if __name__ == '__main__':
-    action = Action()
-    time.sleep(2)
-    while True:
-        action.step_forward()
-        action.wave_hand()
-        action.squat()
-        time.sleep(3)
+    def squat(self, depth=40):
+        """Simula el movimiento de agacharse."""
+        print("Agachándose...")
+        for i in range(depth):
+            angles = self.robot.inverse_kinematics(0, -i, 0, hip_angle=0)
+            if self.robot.validate_movement(angles):
+                print(f"Ángulos al agacharse: {angles}")
+                time.sleep(self.robot.update_period)
+        print("Levantándose...")
+        for i in range(depth, 0, -1):
+            angles = self.robot.inverse_kinematics(0, -i, 0, hip_angle=0)
+            if self.robot.validate_movement(angles):
+                print(f"Ángulos al levantarse: {angles}")
+                time.sleep(self.robot.update_period)
+
+if __name__ == "__main__":
+    actions = RobotActions(update_frequency=50)
+    actions.walk_forward(steps=3)
+    actions.squat(depth=30)
