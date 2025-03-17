@@ -13,12 +13,7 @@ class RobotActions:
         for _ in range(steps):
             trajectory = self.robot.calculate_step_trajectory(self.step_height, self.step_length)
             for point in trajectory:
-                x, y, z = point
-                # Corregir valores fuera del dominio
-                x = max(min(x, 1), -1)
-                y = max(min(y, 1), -1)
-                z = max(min(z, 1), -1)
-                angles = self.robot.inverse_kinematics(x, y, z, hip_angle=self.hip_angle)
+                angles = self.robot.inverse_kinematics(*point, hip_angle=self.hip_angle)
                 if self.robot.validate_movement(angles):
                     print(f"Ángulos calculados: {angles}")
                     time.sleep(self.robot.update_period)
@@ -29,16 +24,12 @@ class RobotActions:
         """Simula el movimiento de agacharse."""
         print("Agachándose...")
         for i in range(depth):
-            # Corregir valores fuera del dominio
-            i = max(min(i, 1), -1)
             angles = self.robot.inverse_kinematics(0, -i, 0, hip_angle=0)
             if self.robot.validate_movement(angles):
                 print(f"Ángulos al agacharse: {angles}")
                 time.sleep(self.robot.update_period)
         print("Levantándose...")
         for i in range(depth, 0, -1):
-            # Corregir valores fuera del dominio
-            i = max(min(i, 1), -1)
             angles = self.robot.inverse_kinematics(0, -i, 0, hip_angle=0)
             if self.robot.validate_movement(angles):
                 print(f"Ángulos al levantarse: {angles}")
