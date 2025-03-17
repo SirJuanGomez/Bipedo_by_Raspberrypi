@@ -20,6 +20,10 @@ class RobotControl:
         else:
             print(f"Error: Setpoint {value} fuera de rango para el servo {servo_id}")
 
+    def clamp(self, value, min_value, max_value):
+        """Limita un valor dentro de un rango."""
+        return max(min(value, max_value), min_value)
+
     def inverse_kinematics(self, x, y, z, hip_angle=0):
         """Calcula los ángulos de la pierna usando cinemática inversa, con control de cadera."""
         try:
@@ -30,10 +34,10 @@ class RobotControl:
 
             # Cálculos para los demás segmentos
             l_total = math.sqrt(x**2 + y_adjusted**2 + z_adjusted**2)
-            w = x / l_total
-            v = (self.leg_lengths[1]**2 + l_total**2 - sum(self.leg_lengths[1:])**2) / (2 * self.leg_lengths[1] * l_total)
+            w = self.clamp(x / l_total, -1, 1)
+            v = self.clamp((self.leg_lengths[1]**2 + l_total**2 - sum(self.leg_lengths[1:])**2) / (2 * self.leg_lengths[1] * l_total), -1, 1)
             b = math.asin(w) - math.acos(v)
-            c = math.pi - math.acos((self.leg_lengths[1]**2 + sum(self.leg_lengths[1:])**2 - l_total**2) / (2 * sum(self.leg_lengths[1:]) * self.leg_lengths[1]))
+            c = math.pi - math.acos(self.clamp((self.leg_lengths[1]**2 + sum(self.leg_lengths[1:])**2 - l_total**2) / (2 * sum(self.leg_lengths[1:]) * self.leg_lengths[1]), -1, 1))
 
             return hip_angle, math.degrees(b), math.degrees(c)
         except ValueError as e:
