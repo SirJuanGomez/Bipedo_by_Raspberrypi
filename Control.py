@@ -1,5 +1,5 @@
 from Servo import Servo
-from PID import PID
+from simple_pid import PID
 import math
 
 class RobotControl:
@@ -54,7 +54,31 @@ class RobotControl:
             z = step_height * math.sin(math.pi * t)
             trajectory.append((x, y, z))
         return trajectory
-
+    
+    def aplly_pid_control(self,angles):
+        pid_outputs = []
+        for i, angle in enumerate(angles):
+            if angles is not None:
+                pid_outputs = self.pids[i](angles)
+                pid_outputs = self.clamp(pid_outputs,5,175)
+                pid_outputs.append(pid_outputs)
+            else :
+                pid_outputs.append(None)
+        return pid_outputs
+    
+    def convert_trajectory_to_angles(self, trajectory, hip_angle=0):
+        """Convierte una trayectoria (x, y, z) en ángulos aplicando control PID."""
+        angles_list = []
+        for point in trajectory:
+            angles = self.inverse_kinematics(*point, hip_angle)
+            if self.validate_movement(angles):
+                # Aplicar PID a los ángulos calculados
+                corrected_angles = self.apply_pid_control(angles)
+                angles_list.append(corrected_angles)
+            else:
+                print("Movimiento no válido.")
+                angles_list.append((None, None, None))
+        return angles_list
     def validate_movement(self, angles):
         """Verifica que los ángulos estén dentro de los límites."""
         for angle in angles:
@@ -62,12 +86,11 @@ class RobotControl:
                 return False
         return True
 
+    
 if __name__ == "__main__":
     robot = RobotControl(update_frequency=50)
     trajectory = robot.calculate_step_trajectory(step_height=30, step_length=50)
-    for point in trajectory:
-        angles = robot.inverse_kinematics(*point, hip_angle=15)  # Prueba con la cadera a 15°
-        if robot.validate_movement(angles):
-            print(f"Ángulos calculados: {angles}")
-        else:
-            print("Movimiento no válido.")
+    angles_list = robot.convert_trajectory_to_angles(trajectory, hip_angle=15)
+    for angles in angles_list:
+        print(f"Ángulos calculados con PID: {angles}")
+
