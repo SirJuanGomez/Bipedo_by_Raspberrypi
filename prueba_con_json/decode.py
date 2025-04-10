@@ -1,4 +1,4 @@
-from servo_control import Servo
+from Servo import Servo
 import time
 
 ARTICULACIONES_A_SERVO = {
@@ -37,19 +37,19 @@ def paso_derecha_adelante():
         "pie_derecho": 95,
 
         # Pierna izquierda atrás (soporte)
-        "muslo_izquierdo": 70,
-        "muslo_superior_izquierdo": 80,
-        "rodilla_izquierda": 85,
-        "pie_izquierdo": 90,
+        "muslo_izquierdo": 110,
+        "muslo_superior_izquierdo": 100,
+        "rodilla_izquierda": 100,
+        "pie_izquierdo": 95,
     }, pausa=0.4)
 
 def paso_izquierda_adelante():
     mover_articulaciones({
         # Pierna izquierda adelante
-        "muslo_izquierdo": 110,
-        "muslo_superior_izquierdo": 100,
-        "rodilla_izquierda": 100,
-        "pie_izquierdo": 95,
+        "muslo_izquierdo": 70,
+        "muslo_superior_izquierdo": 80,
+        "rodilla_izquierda": 85,
+        "pie_izquierdo": 90,
 
         # Pierna derecha atrás (soporte)
         "muslo_derecho": 70,
