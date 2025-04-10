@@ -1,5 +1,5 @@
 #coding:utf-8
-from PCA9685 import PCA9685
+from prueba_con_json.PCA9685 import PCA9685
 import time 
 
 class Servo:

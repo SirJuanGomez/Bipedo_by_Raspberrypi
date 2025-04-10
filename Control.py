@@ -1,4 +1,4 @@
-from Servo import Servo
+from prueba_con_json.Servo import Servo
 from simple_pid import PID
 import math
 

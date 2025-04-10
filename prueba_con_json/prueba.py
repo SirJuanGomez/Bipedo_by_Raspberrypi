@@ -1,11 +1,30 @@
 import json
 
 ARTICULACIONES_VALIDAS = [
-    "hombro_izquierdo", "codo_izquierdo", "mano_izquierda",
-    "hombro_derecho", "codo_derecho", "mano_derecha",
-    "cadera_izquierda", "rodilla_izquierda", "pie_izquierdo",
-    "cadera_derecha", "rodilla_derecha", "pie_derecho"
+    "pie_derecho", "rodilla_derecha", "muslo_derecho", "muslo_superior_derecho",
+    "cadera_derecha", "hombro_derecho", "codo_derecho", "mano_derecha",
+    "mano_izquierda", "codo_izquierdo", "hombro_izquierdo", "cadera_izquierda",
+    "muslo_superior_izquierdo", "muslo_izquierdo", "rodilla_izquierda", "pie_izquierdo"
 ]
+
+ARTICULACIONES_A_SERVO = {
+    "pie_derecho": 0,
+    "rodilla_derecha": 1,
+    "muslo_derecho": 2,
+    "muslo_superior_derecho": 3,
+    "cadera_derecha": 4,
+    "hombro_derecho": 5,
+    "codo_derecho": 6,
+    "mano_derecha": 7,
+    "mano_izquierda": 8,
+    "codo_izquierdo": 9,
+    "hombro_izquierdo": 10,
+    "cadera_izquierda": 11,
+    "muslo_superior_izquierdo": 12,
+    "muslo_izquierdo": 13,
+    "rodilla_izquierda": 14,
+    "pie_izquierdo": 15
+}
 
 class PID:
     def __init__(self, kp=0.5, ki=0.0, kd=0.1):
@@ -59,16 +78,24 @@ def interpolar_keyframes(pid, inicio, fin, steps, dt):
     frames = []
     actuales = inicio["angles"].copy()
 
+    # Asegurar que todas las articulaciones tengan valor inicial
+    for art in ARTICULACIONES_VALIDAS:
+        if art not in actuales:
+            actuales[art] = fin["angles"].get(art, 90)  # Valor por defecto 90
+
     for step in range(1, steps + 1):
         t = inicio["time"] + step * dt
-        nuevo = {"time": round(t, 3), "angles": {}}
-        for joint in fin["angles"]:
-            ang_inicial = actuales.get(joint, fin["angles"][joint])  # por si faltaba
-            ang_deseado = fin["angles"][joint]
-
-            output = pid.update(joint, ang_deseado, ang_inicial, dt)
-            actuales[joint] = max(0, min(180, ang_inicial + output))
-            nuevo["angles"][joint] = round(actuales[joint], 2)
+        nuevo = {"time": round(t, 3), "servos": []}
+        for art in ARTICULACIONES_VALIDAS:
+            ang_deseado = fin["angles"].get(art, actuales[art])
+            ang_actual = actuales[art]
+            output = pid.update(art, ang_deseado, ang_actual, dt)
+            ang_nuevo = max(0, min(180, ang_actual + output))
+            actuales[art] = ang_nuevo
+            nuevo["servos"].append({
+                "id": ARTICULACIONES_A_SERVO[art],
+                "angle": round(ang_nuevo, 2)
+            })
         frames.append(nuevo)
     return frames
 
@@ -86,7 +113,7 @@ def crear_movimiento_con_pid():
         tiempo += float(input("⏱️ ¿Cuántos segundos hasta el próximo keyframe?: "))
 
     pid = PID(kp=0.8, ki=0.0, kd=0.05)
-    all_frames = [base_keyframes[0]]
+    all_frames = []
     dt = 1.0 / fps
 
     for i in range(len(base_keyframes) - 1):
@@ -100,7 +127,7 @@ def crear_movimiento_con_pid():
     motion = {
         "name": nombre,
         "fps": fps,
-        "keyframes": all_frames
+        "frames": all_frames
     }
 
     archivo = input("💾 Nombre del archivo para guardar (ej: saludo.json): ").strip()

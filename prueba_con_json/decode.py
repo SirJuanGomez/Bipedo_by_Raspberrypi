@@ -1,35 +1,30 @@
 import json
 import time
-from Servo import *
+from prueba_con_json.Servo import Servo
 
-servo_contrl = Servo()
-# Mapeo entre nombres del JSON y objetos servo que vos ya creaste
-servo_map = {
-    "rodilla_izquierda": 3 ,
-    "pie_izquierdo": 4,
-    "rodilla_derecha": 13 ,
-    "pie_derecho": 14 
-}
+FPS_POR_DEFECTO = 30
 
-# Cargar el archivo JSON
-with open("movimiento.json", "r") as f:
-    data = json.load(f)
+def reproducir_movimiento(nombre_archivo):
+    with open(nombre_archivo, "r") as f:
+        data = json.load(f)
 
-fps = data["fps"]
-frame_duration = 1 / fps
-keyframes = data["keyframes"]
+    fps = data.get("fps", FPS_POR_DEFECTO)
+    delay = 1.0 / fps
+    frames = data["frames"]
 
-# Reproducir la animación
-for i, keyframe in enumerate(keyframes):
-    angles = keyframe["angles"]
+    servo = Servo()
 
-    for name, angle in angles.items():
-        if name in servo_map:
-            servo_map[name].set_angle(angle)  # Usá tu propia función aquí
+    for frame in frames:
+        print(f"t = {frame['time']}s")
+        for servo_data in frame["servos"]:
+            servo_id = servo_data["id"]
+            angle = servo_data["angle"]
+            servo.setServoAngle(servo_id, angle)
+        time.sleep(delay)
 
-    # Calcular el tiempo de espera
-    if i < len(keyframes) - 1:
-        t_actual = keyframe["time"]
-        t_siguiente = keyframes[i + 1]["time"]
-        sleep_time = (t_siguiente - t_actual) * frame_duration
-        time.sleep(sleep_time)
+    print("Movimiento completado.")
+
+# === MAIN ===
+if __name__ == "__main__":
+    archivo = input("Archivo de movimiento:").strip()
+    reproducir_movimiento(archivo)
