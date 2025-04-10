@@ -49,19 +49,22 @@ def centrar_todo():
 
 def paso_derecho_adelante():
     mover_articulaciones({
-        # Pierna derecha al frente
-        "muslo_derecho": 110,
-        "muslo_superior_derecho": 100,
+        # Pierna derecha al frente (más elevación arriba)
+        "muslo_derecho": 100,
+        "muslo_superior_derecho": 120,  # Se eleva más
         "rodilla_derecha": 115,
         "pie_derecho": 95,
-        # Pierna izquierda atrás
+
+        # Pierna izquierda atrás (soporte)
         "muslo_izquierdo": 70,
-        "muslo_superior_izquierdo": 80,
+        "muslo_superior_izquierdo": 75,
         "rodilla_izquierda": 85,
         "pie_izquierdo": 90,
-        # Cadera inclinada para empuje
-        "cadera_derecha": 100,
-        "cadera_izquierda": 100,
+
+        # Cadera inclinada
+        "cadera_derecha": 102,
+        "cadera_izquierda": 102,
+
         # Brazos opuestos
         "hombro_derecho": 70,     # Atrás
         "hombro_izquierdo": 110,  # Adelante
@@ -69,27 +72,30 @@ def paso_derecho_adelante():
 
 def paso_izquierdo_adelante():
     mover_articulaciones({
-        # Pierna izquierda al frente
-        "muslo_izquierdo": 110,
-        "muslo_superior_izquierdo": 100,
+        # Pierna izquierda al frente (más elevación arriba)
+        "muslo_izquierdo": 100,
+        "muslo_superior_izquierdo": 120,
         "rodilla_izquierda": 115,
         "pie_izquierdo": 95,
-        # Pierna derecha atrás
+
+        # Pierna derecha atrás (soporte)
         "muslo_derecho": 70,
-        "muslo_superior_derecho": 80,
+        "muslo_superior_derecho": 75,
         "rodilla_derecha": 85,
         "pie_derecho": 90,
-        # Cadera inclinada para empuje
-        "cadera_derecha": 80,
-        "cadera_izquierda": 80,
+
+        # Cadera inclinada
+        "cadera_derecha": 78,
+        "cadera_izquierda": 78,
+
         # Brazos opuestos
         "hombro_derecho": 110,  # Adelante
         "hombro_izquierdo": 70, # Atrás
     }, pausa=0.4)
 
-# 🦿 Bucle de caminata completa
+# 🦿 Bucle principal de caminata
 if __name__ == '__main__':
-    print("Iniciando caminata humana mejorada...")
+    print("Iniciando caminata humana mejorada con elevación superior...")
     try:
         centrar_todo()
         while True:
