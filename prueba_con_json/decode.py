@@ -1,6 +1,6 @@
 import json
 import time
-from prueba_con_json.Servo import Servo
+from Servo import Servo
 
 FPS_POR_DEFECTO = 30
 
