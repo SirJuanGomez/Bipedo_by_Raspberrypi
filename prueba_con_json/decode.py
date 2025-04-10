@@ -68,6 +68,10 @@ def paso_derecho_adelante():
         "hombro_derecho": 85,
         "hombro_izquierdo": 95,
     }, pausa=0.35)
+    mover_articulaciones({
+        "rodilla_izquierda": 110,
+        "pie_izquierdo": 85
+    }, pausa=0.35)
 
 def paso_izquierdo_adelante():
     mover_articulaciones({
