@@ -45,53 +45,55 @@ def centrar_todo():
         # Brazos
         "hombro_derecho": 90,
         "hombro_izquierdo": 90,
-    }, pausa=0.2)
+    }, pausa=0.4)
 
 def paso_derecho_adelante():
     mover_articulaciones({
-        # Pierna derecha al frente (ángulos menores)
-        "muslo_derecho": 60,
-        "muslo_superior_derecho": 70,
-        "rodilla_derecha": 85,
+        # Pierna derecha al frente (ligero ángulo hacia adelante)
+        "muslo_derecho": 80,
+        "muslo_superior_derecho": 85,
+        "rodilla_derecha": 95,
         "pie_derecho": 90,
 
-        # Pierna izquierda atrás (ángulos mayores)
-        "muslo_izquierdo": 115,
-        "muslo_superior_izquierdo": 120,
-        "rodilla_izquierda": 115,
+        # Pierna izquierda atrás (ligero empuje)
+        "muslo_izquierdo": 100,
+        "muslo_superior_izquierdo": 95,
+        "rodilla_izquierda": 95,
         "pie_izquierdo": 90,
 
-        # Cadera y brazos
-        "cadera_derecha": 100,
-        "cadera_izquierda": 100,
-        "hombro_derecho": 70,
-        "hombro_izquierdo": 110,
-    }, pausa=0.4)
+        # Balanceo suave
+        "cadera_derecha": 95,
+        "cadera_izquierda": 95,
+
+        "hombro_derecho": 85,
+        "hombro_izquierdo": 95,
+    }, pausa=0.35)
 
 def paso_izquierdo_adelante():
     mover_articulaciones({
-        # Pierna izquierda al frente (ángulos menores)
-        "muslo_izquierdo": 60,
-        "muslo_superior_izquierdo": 70,
-        "rodilla_izquierda": 85,
+        # Pierna izquierda al frente
+        "muslo_izquierdo": 80,
+        "muslo_superior_izquierdo": 85,
+        "rodilla_izquierda": 95,
         "pie_izquierdo": 90,
 
-        # Pierna derecha atrás (ángulos mayores)
-        "muslo_derecho": 115,
-        "muslo_superior_derecho": 120,
-        "rodilla_derecha": 115,
+        # Pierna derecha atrás
+        "muslo_derecho": 100,
+        "muslo_superior_derecho": 95,
+        "rodilla_derecha": 95,
         "pie_derecho": 90,
 
-        # Cadera y brazos
-        "cadera_derecha": 80,
-        "cadera_izquierda": 80,
-        "hombro_derecho": 110,
-        "hombro_izquierdo": 70,
-    }, pausa=0.4)
+        # Balanceo suave
+        "cadera_derecha": 85,
+        "cadera_izquierda": 85,
 
-# 🦿 Bucle de caminata completa
+        "hombro_derecho": 95,
+        "hombro_izquierdo": 85,
+    }, pausa=0.35)
+
+# 🦿 Bucle principal de caminata
 if __name__ == '__main__':
-    print("Iniciando caminata humana mejorada...")
+    print("Iniciando caminata fluida y balanceada...")
     try:
         centrar_todo()
         while True:
