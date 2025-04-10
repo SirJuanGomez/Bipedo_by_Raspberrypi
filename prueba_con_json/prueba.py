@@ -1,12 +1,5 @@
 import json
 
-ARTICULACIONES_VALIDAS = [
-    "pie_derecho", "rodilla_derecha", "muslo_derecho", "muslo_superior_derecho",
-    "cadera_derecha", "hombro_derecho", "codo_derecho", "mano_derecha",
-    "mano_izquierda", "codo_izquierdo", "hombro_izquierdo", "cadera_izquierda",
-    "muslo_superior_izquierdo", "muslo_izquierdo", "rodilla_izquierda", "pie_izquierdo"
-]
-
 ARTICULACIONES_A_SERVO = {
     "pie_derecho": 0,
     "rodilla_derecha": 1,

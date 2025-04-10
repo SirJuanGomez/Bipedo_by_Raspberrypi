@@ -1,30 +1,73 @@
-import json
+from servo_control import Servo
 import time
-from Servo import Servo
 
-FPS_POR_DEFECTO = 30
+ARTICULACIONES_A_SERVO = {
+    "pie_derecho": 0,
+    "rodilla_derecha": 1,
+    "muslo_derecho": 2,
+    "muslo_superior_derecho": 3,
+    "cadera_derecha": 4,
+    "hombro_derecho": 5,
+    "codo_derecho": 6,
+    "mano_derecha": 7,
+    "mano_izquierda": 8,
+    "codo_izquierdo": 9,
+    "hombro_izquierdo": 10,
+    "cadera_izquierda": 11,
+    "muslo_superior_izquierdo": 12,
+    "muslo_izquierdo": 13,
+    "rodilla_izquierda": 14,
+    "pie_izquierdo": 15
+}
 
-def reproducir_movimiento(nombre_archivo):
-    with open(nombre_archivo, "r") as f:
-        data = json.load(f)
+robot = Servo()
 
-    fps = data.get("fps", FPS_POR_DEFECTO)
-    delay = 1.0 / fps
-    frames = data["frames"]
+def mover_articulaciones(movimientos, pausa=0.01):
+    for articulacion, angulo in movimientos.items():
+        canal = ARTICULACIONES_A_SERVO[articulacion]
+        robot.setServoAngle(canal, angulo)
+    time.sleep(pausa)
 
-    servo = Servo()
+def paso_pierna_derecha():
+    mover_articulaciones({
+        "muslo_derecho": 110,
+        "rodilla_derecha": 100,
+        "pie_derecho": 95,
+        "muslo_izquierdo": 70,
+        "rodilla_izquierda": 85,
+        "pie_izquierdo": 90,
+    }, pausa=0.3)
 
-    for frame in frames:
-        print(f"t = {frame['time']}s")
-        for servo_data in frame["servos"]:
-            servo_id = servo_data["id"]
-            angle = servo_data["angle"]
-            servo.setServoAngle(servo_id, angle)
-        time.sleep(delay)
+def paso_pierna_izquierda():
+    mover_articulaciones({
+        "muslo_izquierdo": 110,
+        "rodilla_izquierda": 100,
+        "pie_izquierdo": 95,
+        "muslo_derecho": 70,
+        "rodilla_derecha": 85,
+        "pie_derecho": 90,
+    }, pausa=0.3)
 
-    print("Movimiento completado.")
+def centrar_piernas():
+    mover_articulaciones({
+        "muslo_derecho": 90,
+        "rodilla_derecha": 90,
+        "pie_derecho": 90,
+        "muslo_izquierdo": 90,
+        "rodilla_izquierda": 90,
+        "pie_izquierdo": 90,
+    }, pausa=0.2)
 
-# === MAIN ===
-if __name__ == "__main__":
-    archivo = input("Archivo de movimiento:").strip()
-    reproducir_movimiento(archivo)
+# Loop de caminata
+if __name__ == '__main__':
+    print("Iniciando caminata con dos piernas...")
+    try:
+        centrar_piernas()
+        while True:
+            paso_pierna_derecha()
+            centrar_piernas()
+            paso_pierna_izquierda()
+            centrar_piernas()
+    except KeyboardInterrupt:
+        print("\nCaminata detenida.")
+        centrar_piernas()
