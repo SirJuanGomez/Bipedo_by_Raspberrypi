@@ -1,6 +1,5 @@
 from Servo import Servo
 import time
-import keyboard  # Asegúrate de tenerlo instalado con: pip install keyboard
 
 ARTICULACIONES_A_SERVO = {
     "pie_derecho": 0,
@@ -81,10 +80,10 @@ def caminar_ambas_alternado():
     paso_izquierdo()
     centrar_todo()
 
-# 🌟 Loop interactivo
+# 🌟 Loop interactivo para Raspberry Pi
 def menu_interactivo():
     while True:
-        print("\nOpciones:")
+        print("\n--- MENÚ DE CAMINATA ---")
         print("1. Solo pierna derecha")
         print("2. Solo pierna izquierda")
         print("3. Alternar ambas piernas")
@@ -92,28 +91,31 @@ def menu_interactivo():
         opcion = input("Selecciona opción (1/2/3/q): ").strip()
 
         if opcion == "q":
-            print("Saliendo...")
+            print("Saliendo del programa...")
             break
 
         if opcion not in ("1", "2", "3"):
             print("Opción inválida.")
             continue
 
-        print("Presiona 'p' para pausar y volver al menú.")
+        print("\nEjecutando... Presiona Enter para pausar y volver al menú.")
         try:
             while True:
-                if keyboard.is_pressed('p'):
-                    print("\nPausa detectada. Regresando al menú...")
-                    centrar_todo()
-                    break
                 if opcion == "1":
                     caminar_derecha_sola()
                 elif opcion == "2":
                     caminar_izquierda_sola()
                 elif opcion == "3":
                     caminar_ambas_alternado()
+
+                # Espera mínima para detectar Enter sin bloquear todo
+                if input("Presiona Enter para pausar, o solo espera para continuar...") == "":
+                    print("⏸️ Pausado. Regresando al menú...")
+                    centrar_todo()
+                    break
         except KeyboardInterrupt:
-            print("\nInterrumpido por el usuario.")
+            print("\nMovimiento interrumpido.")
+            centrar_todo()
             break
 
 if __name__ == '__main__':
