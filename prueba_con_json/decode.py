@@ -28,45 +28,57 @@ def mover_articulaciones(movimientos, pausa=0.01):
         robot.setServoAngle(canal, angulo)
     time.sleep(pausa)
 
-def paso_pierna_derecha():
+def paso_derecha_adelante():
     mover_articulaciones({
+        # Pierna derecha adelante
         "muslo_derecho": 110,
+        "muslo_superior_derecho": 100,
         "rodilla_derecha": 100,
         "pie_derecho": 95,
+
+        # Pierna izquierda atrás (soporte)
         "muslo_izquierdo": 70,
+        "muslo_superior_izquierdo": 80,
         "rodilla_izquierda": 85,
         "pie_izquierdo": 90,
-    }, pausa=0.3)
+    }, pausa=0.4)
 
-def paso_pierna_izquierda():
+def paso_izquierda_adelante():
     mover_articulaciones({
+        # Pierna izquierda adelante
         "muslo_izquierdo": 110,
+        "muslo_superior_izquierdo": 100,
         "rodilla_izquierda": 100,
         "pie_izquierdo": 95,
+
+        # Pierna derecha atrás (soporte)
         "muslo_derecho": 70,
+        "muslo_superior_derecho": 80,
         "rodilla_derecha": 85,
         "pie_derecho": 90,
-    }, pausa=0.3)
+    }, pausa=0.4)
 
 def centrar_piernas():
     mover_articulaciones({
         "muslo_derecho": 90,
+        "muslo_superior_derecho": 90,
         "rodilla_derecha": 90,
         "pie_derecho": 90,
         "muslo_izquierdo": 90,
+        "muslo_superior_izquierdo": 90,
         "rodilla_izquierda": 90,
         "pie_izquierdo": 90,
     }, pausa=0.2)
 
 # Loop de caminata
 if __name__ == '__main__':
-    print("Iniciando caminata con dos piernas...")
+    print("Iniciando caminata alternada...")
     try:
         centrar_piernas()
         while True:
-            paso_pierna_derecha()
+            paso_derecha_adelante()
             centrar_piernas()
-            paso_pierna_izquierda()
+            paso_izquierda_adelante()
             centrar_piernas()
     except KeyboardInterrupt:
         print("\nCaminata detenida.")
