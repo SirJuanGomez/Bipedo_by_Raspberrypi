@@ -1,5 +1,6 @@
 from Servo import Servo
 import time
+import keyboard  # Asegúrate de tenerlo instalado con: pip install keyboard
 
 ARTICULACIONES_A_SERVO = {
     "pie_derecho": 0,
@@ -38,7 +39,6 @@ def centrar_todo():
         "hombro_derecho": 90, "hombro_izquierdo": 90
     }, pausa=0.5)
 
-# Paso derecho solo
 def paso_derecho():
     mover_articulaciones({
         "muslo_derecho": 80,
@@ -53,7 +53,6 @@ def paso_derecho():
         "pie_derecho": 90
     }, pausa=0.15)
 
-# Paso izquierdo solo
 def paso_izquierdo():
     mover_articulaciones({
         "muslo_izquierdo": 80,
@@ -68,42 +67,55 @@ def paso_izquierdo():
         "pie_izquierdo": 90
     }, pausa=0.15)
 
-# Secuencias de prueba
-def caminar_derecha_sola(repeticiones=3):
+def caminar_derecha_sola():
+    paso_derecho()
     centrar_todo()
-    for _ in range(repeticiones):
-        paso_derecho()
-        centrar_todo()
 
-def caminar_izquierda_sola(repeticiones=3):
+def caminar_izquierda_sola():
+    paso_izquierdo()
     centrar_todo()
-    for _ in range(repeticiones):
-        paso_izquierdo()
-        centrar_todo()
 
-def caminar_ambas_alternado(repeticiones=3):
+def caminar_ambas_alternado():
+    paso_derecho()
     centrar_todo()
-    for _ in range(repeticiones):
-        paso_derecho()
-        centrar_todo()
-        paso_izquierdo()
-        centrar_todo()
+    paso_izquierdo()
+    centrar_todo()
 
-# Menú principal
-if __name__ == '__main__':
-    try:
+# 🌟 Loop interactivo
+def menu_interactivo():
+    while True:
+        print("\nOpciones:")
         print("1. Solo pierna derecha")
         print("2. Solo pierna izquierda")
         print("3. Alternar ambas piernas")
-        opcion = input("Selecciona opción (1/2/3): ").strip()
-        if opcion == "1":
-            caminar_derecha_sola()
-        elif opcion == "2":
-            caminar_izquierda_sola()
-        elif opcion == "3":
-            caminar_ambas_alternado()
-        else:
-            print("Opción no válida.")
-    except KeyboardInterrupt:
-        print("\nMovimiento detenido por usuario.")
-        centrar_todo()
+        print("q. Salir")
+        opcion = input("Selecciona opción (1/2/3/q): ").strip()
+
+        if opcion == "q":
+            print("Saliendo...")
+            break
+
+        if opcion not in ("1", "2", "3"):
+            print("Opción inválida.")
+            continue
+
+        print("Presiona 'p' para pausar y volver al menú.")
+        try:
+            while True:
+                if keyboard.is_pressed('p'):
+                    print("\nPausa detectada. Regresando al menú...")
+                    centrar_todo()
+                    break
+                if opcion == "1":
+                    caminar_derecha_sola()
+                elif opcion == "2":
+                    caminar_izquierda_sola()
+                elif opcion == "3":
+                    caminar_ambas_alternado()
+        except KeyboardInterrupt:
+            print("\nInterrumpido por el usuario.")
+            break
+
+if __name__ == '__main__':
+    centrar_todo()
+    menu_interactivo()
