@@ -48,52 +48,54 @@ def centrar_todo():
     }, pausa=0.4)
 
 def paso_derecho_adelante():
+    # Etapa 1: levantar pierna derecha
     mover_articulaciones({
-        # Pierna derecha al frente (ligero ángulo hacia adelante)
         "muslo_derecho": 80,
         "muslo_superior_derecho": 85,
-        "rodilla_derecha": 95,
-        "pie_derecho": 90,
+        "rodilla_derecha": 100,   # menos flexión al levantar
+        "pie_derecho": 100,       # inclinado
 
-        # Pierna izquierda atrás (ligero empuje)
         "muslo_izquierdo": 100,
         "muslo_superior_izquierdo": 95,
         "rodilla_izquierda": 95,
         "pie_izquierdo": 90,
 
-        # Balanceo suave
         "cadera_derecha": 95,
         "cadera_izquierda": 95,
-
         "hombro_derecho": 85,
         "hombro_izquierdo": 95,
-    }, pausa=0.35)
+    }, pausa=0.3)
+
+    # Etapa 2: bajar pierna, flexionando un poco la rodilla
     mover_articulaciones({
-        "rodilla_izquierda": 110,
-        "pie_izquierdo": 85
-    }, pausa=0.35)
+        "rodilla_derecha": 110,  # más flexión
+        "pie_derecho": 90        # pie plano
+    }, pausa=0.15)
 
 def paso_izquierdo_adelante():
+    # Etapa 1: levantar pierna izquierda
     mover_articulaciones({
-        # Pierna izquierda al frente
         "muslo_izquierdo": 80,
         "muslo_superior_izquierdo": 85,
-        "rodilla_izquierda": 95,
-        "pie_izquierdo": 90,
+        "rodilla_izquierda": 100,
+        "pie_izquierdo": 100,
 
-        # Pierna derecha atrás
         "muslo_derecho": 100,
         "muslo_superior_derecho": 95,
         "rodilla_derecha": 95,
         "pie_derecho": 90,
 
-        # Balanceo suave
         "cadera_derecha": 85,
         "cadera_izquierda": 85,
-
         "hombro_derecho": 95,
         "hombro_izquierdo": 85,
-    }, pausa=0.35)
+    }, pausa=0.3)
+
+    # Etapa 2: bajar pierna izquierda con flexión
+    mover_articulaciones({
+        "rodilla_izquierda": 110,
+        "pie_izquierdo": 90
+    }, pausa=0.15)
 
 # 🦿 Bucle principal de caminata
 if __name__ == '__main__':
