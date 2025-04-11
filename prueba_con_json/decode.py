@@ -1,20 +1,22 @@
 from Servo import Servo
 import time
+import sys
+import select
 
 ARTICULACIONES_A_SERVO = {
     "pie_derecho": 0,
     "rodilla_derecha": 1,
     "muslo_derecho": 2,
-    "muslo_superior_derecho": 3,
-    "cadera_derecha": 4,
-    "hombro_derecho": 5,
-    "codo_derecho": 6,
-    "mano_derecha": 7,
-    "mano_izquierda": 8,
-    "codo_izquierdo": 9,
-    "hombro_izquierdo": 10,
-    "cadera_izquierda": 11,
-    "muslo_superior_izquierdo": 12,
+    "cadera_derecha": 3,
+    "hombro_derecho": 4,
+    "codo_derecho": 5,
+    "mano_derecha": 6,
+    "cabeza": 7,
+    "sin uso": 8,
+    "mano_izquierda": 9,
+    "codo_izquierdo": 10,
+    "hombro_izquierdo": 11,
+    "cadera_izquierda": 12,
     "muslo_izquierdo": 13,
     "rodilla_izquierda": 14,
     "pie_izquierdo": 15
@@ -24,24 +26,30 @@ robot = Servo()
 
 def mover_articulaciones(movimientos, pausa=0.01):
     for articulacion, angulo in movimientos.items():
-        canal = ARTICULACIONES_A_SERVO[articulacion]
-        robot.setServoAngle(canal, angulo)
+        canal = ARTICULACIONES_A_SERVO.get(articulacion)
+        if canal is not None:
+            robot.setServoAngle(canal, angulo)
+        else:
+            print(f"⚠️ Articulación '{articulacion}' no encontrada.")
     time.sleep(pausa)
 
 def centrar_todo():
     mover_articulaciones({
-        "muslo_derecho": 90, "muslo_superior_derecho": 90,
-        "rodilla_derecha": 90, "pie_derecho": 90,
-        "muslo_izquierdo": 90, "muslo_superior_izquierdo": 90,
-        "rodilla_izquierda": 90, "pie_izquierdo": 90,
-        "cadera_derecha": 90, "cadera_izquierda": 90,
-        "hombro_derecho": 90, "hombro_izquierdo": 90
+        "muslo_derecho": 90,
+        "rodilla_derecha": 90,
+        "pie_derecho": 90,
+        "muslo_izquierdo": 90,
+        "rodilla_izquierda": 90,
+        "pie_izquierdo": 90,
+        "cadera_derecha": 90,
+        "cadera_izquierda": 90,
+        "hombro_derecho": 90,
+        "hombro_izquierdo": 90
     }, pausa=0.5)
 
 def paso_derecho():
     mover_articulaciones({
         "muslo_derecho": 80,
-        "muslo_superior_derecho": 85,
         "rodilla_derecha": 100,
         "pie_derecho": 100,
         "cadera_derecha": 95,
@@ -55,7 +63,6 @@ def paso_derecho():
 def paso_izquierdo():
     mover_articulaciones({
         "muslo_izquierdo": 80,
-        "muslo_superior_izquierdo": 85,
         "rodilla_izquierda": 100,
         "pie_izquierdo": 100,
         "cadera_izquierda": 95,
@@ -80,7 +87,14 @@ def caminar_ambas_alternado():
     paso_izquierdo()
     centrar_todo()
 
-# 🌟 Loop interactivo para Raspberry Pi
+def esperar_o_continuar(timeout=0.5):
+    print("Presiona Enter para pausar, o espera para continuar...", end='', flush=True)
+    i, o, e = select.select([sys.stdin], [], [], timeout)
+    if i:
+        input()
+        return True
+    return False
+
 def menu_interactivo():
     while True:
         print("\n--- MENÚ DE CAMINATA ---")
@@ -108,13 +122,12 @@ def menu_interactivo():
                 elif opcion == "3":
                     caminar_ambas_alternado()
 
-                # Espera mínima para detectar Enter sin bloquear todo
-                if input("Presiona Enter para pausar, o solo espera para continuar...") == "":
+                if esperar_o_continuar():
                     print("⏸️ Pausado. Regresando al menú...")
                     centrar_todo()
                     break
         except KeyboardInterrupt:
-            print("\nMovimiento interrumpido.")
+            print("\n⚠️ Movimiento interrumpido con Ctrl+C.")
             centrar_todo()
             break
 
