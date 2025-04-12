@@ -79,28 +79,27 @@ class Moves:
 
 
     def saludo_up(self):
+        self.pose_inicial()
         self.mover_articulaciones({
             ##################Superior############################
-            "hombro_derecho": 150,
+            "hombro_derecho": 180,
             "codo_derecho": 90,
             "mano_derecha": 90,    
-            "hombro_izquierdo": 120,
+            "hombro_izquierdo": 90,
             "codo_izquierdo": 90,
             "mano_izquierda": 90,
-        },pausa=0.5)
+        },pausa=0.3)
         
         self.mover_articulaciones({
             ##################Superior############################
-            "hombro_derecho": 170,
-            "codo_derecho": 100,
-            "mano_derecha": 90,    
-            "hombro_izquierdo": 120,
-            "codo_izquierdo": 90,
-            "mano_izquierda": 90,
-        },pausa=0.5)
+            "hombro_derecho": 180,
+            "codo_derecho": 130,
+            "mano_derecha": 120
+        },pausa=0.9)
         
     def head_cicle(self):
         self.mover_articulaciones({"cabeza":130},pausa=1)
         self.mover_articulaciones({"cabeza":35},pausa=1)
+
 
 

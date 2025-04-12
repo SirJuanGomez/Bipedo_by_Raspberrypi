@@ -38,15 +38,22 @@ class App:
 
     def pose_saludo(self):
         moves.pose_saludo()
+        for _ in range(2):
+            moves.saludo_hands()
+            _=+1
+        moves.pose_inicial()
 
     def saludo_hands(self):
         moves.saludo_hands()
+        moves.pose_inicial()
 
     def saludo_up(self):
         moves.saludo_up()
+        moves.pose_inicial() 
 
     def head_cicle(self):
         moves.head_cicle()
+        moves.pose_inicial()
 
     def detener(self):
         self.ir_handler.detener()
@@ -67,3 +74,4 @@ def main():
 # Ejecutar la aplicación
 if __name__ == "__main__":
     main()
+
