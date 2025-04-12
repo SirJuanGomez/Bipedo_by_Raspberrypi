@@ -73,7 +73,7 @@ class Moves:
             "mano_izquierda": 90,
         },pausa=0.5)
 
-    def posei_inicial(self):
+    def pose_inicial(self):
         for i in range(16):
             self.robot.setServoAngle(i,90)
 
